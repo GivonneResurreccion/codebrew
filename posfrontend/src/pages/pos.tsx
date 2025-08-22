@@ -1,6 +1,6 @@
 // src/pages/Pos.tsx
-import React, { useState, useEffect, useRef } from "react";
-import { FiSearch, FiPlus, FiMinus, FiTrash2, FiPrinter, FiLogOut, FiX } from "react-icons/fi";
+import React, { useState, useRef } from "react";
+import { FiSearch, FiPlus, FiMinus, FiTrash2, FiPrinter, FiLogOut, FiX, FiBarChart2 } from "react-icons/fi";
 import { FaMoneyBillWave, FaCreditCard, FaQrcode, FaUtensils, FaCoffee, FaBreadSlice } from "react-icons/fa";
 
 // --- TYPE DEFINITIONS ---
@@ -60,16 +60,41 @@ const productsData: Product[] = [
     { id: 28, name: "White Chocolate Macadamia Cookie", category: "Bread", price: 50, image: "/white cookie.png", description: "A delicious cookie loaded with creamy white chocolate chunks and crunchy macadamia nuts." },
 ];
 
-// --- SIMPLIFIED & RE-THEMED SIDEBAR COMPONENT ---
-const Sidebar: React.FC = () => (
+// --- UPDATED SIDEBAR COMPONENT ---
+interface SidebarProps {
+  onShowSalesReport: () => void;
+  onShowReceipt: () => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ onShowSalesReport, onShowReceipt }) => (
     <div className="w-20 bg-[#3D2C1D] text-white flex flex-col justify-between items-center py-6">
-      {/* Logo */}
-      <a href="#" className="p-3 bg-[#8C5A3A] rounded-lg hover:bg-[#6F4E37] transition-colors">
-        {/* Changed FaCoffee to an img tag for the logo */}
-        <img src="/logo.png" alt="Logo" className="w-6 h-6" />
-      </a>
+      {/* Top section with logo and new buttons */}
+      <div className="flex flex-col items-center space-y-4">
+        {/* Logo */}
+        <a href="#" className="p-3 bg-[#8C5A3A] rounded-lg hover:bg-[#6F4E37] transition-colors">
+          <img src="/logo.png" alt="Logo" className="w-6 h-6" />
+        </a>
+        
+        {/* Sales Report Button */}
+        <button 
+          onClick={onShowSalesReport}
+          title="Sales Report"
+          className="p-3 rounded-lg hover:bg-[#6F4E37] transition-colors"
+        >
+          <FiBarChart2 size={20} />
+        </button>
+
+        {/* Print Last Receipt Button */}
+        <button 
+          onClick={onShowReceipt}
+          title="Print Last Receipt"
+          className="p-3 rounded-lg hover:bg-[#6F4E37] transition-colors"
+        >
+          <FiPrinter size={20} />
+        </button>
+      </div>
   
-      {/* Logout */}
+      {/* Logout (at the bottom) */}
       <a href="#" className="p-3 rounded-lg hover:bg-[#6F4E37] transition-colors">
         <FiLogOut size={20} />
       </a>
@@ -86,6 +111,8 @@ const Pos: React.FC = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showReceiptModal, setShowReceiptModal] = useState(false);
   const [latestReceipt, setLatestReceipt] = useState<Sale | null>(null);
+  const [salesHistory, setSalesHistory] = useState<Sale[]>([]); // To store all sales
+  const [showSalesReportModal, setShowSalesReportModal] = useState(false); // To toggle sales modal
   const [showProductModal, setShowProductModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [modalQuantity, setModalQuantity] = useState(1);
@@ -177,11 +204,22 @@ const Pos: React.FC = () => {
     };
 
     setLatestReceipt(newSale);
+    setSalesHistory(prevHistory => [...prevHistory, newSale]); // Add sale to history
     setShowPaymentModal(false);
     setShowReceiptModal(true);
     setCart([]);
     setDiscount(0);
   };
+  
+  // Handler for sidebar button to show last receipt
+  const handleShowLastReceipt = () => {
+    if (latestReceipt) {
+        setShowReceiptModal(true);
+    } else {
+        alert("No receipt from the last transaction is available.");
+    }
+  };
+
 
   const handlePrintReceipt = () => {
     const printContent = receiptRef.current?.innerHTML;
@@ -212,7 +250,10 @@ const Pos: React.FC = () => {
 
   return (
     <div className="h-screen bg-[#F5F0E6] flex overflow-hidden">
-    <Sidebar />
+    <Sidebar 
+        onShowSalesReport={() => setShowSalesReportModal(true)} 
+        onShowReceipt={handleShowLastReceipt} 
+    />
     <main className="flex-1 p-6 h-full">
       <div className="flex space-x-6 h-full">
           {/* Left Side - Products */}
@@ -522,6 +563,58 @@ const Pos: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Sales Report Modal */}
+      {showSalesReportModal && (
+        <div className="fixed inset-0 bg-[#3D2C1D] bg-opacity-70 flex justify-center items-center z-50">
+            <div className="bg-[#FFFBF5] p-8 rounded-lg shadow-xl w-full max-w-2xl animate-fadeIn flex flex-col h-[80vh]">
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-3xl font-bold text-[#3D2C1D]">Sales History</h2>
+                    <button
+                        onClick={() => setShowSalesReportModal(false)}
+                        className="text-[#8C5A3A] hover:text-[#3D2C1D]"
+                    >
+                        <FiX size={24} />
+                    </button>
+                </div>
+                <div className="flex-grow overflow-y-auto pr-4 border-t border-b border-[#D6C7B7] py-4">
+                    {salesHistory.length === 0 ? (
+                        <p className="text-center text-[#8C5A3A] mt-10">No sales recorded yet.</p>
+                    ) : (
+                        <table className="w-full text-left text-[#6F4E37]">
+                            <thead className="border-b border-[#D6C7B7]">
+                                <tr>
+                                    <th className="p-2">Date</th>
+                                    <th className="p-2">Items</th>
+                                    <th className="p-2">Payment Method</th>
+                                    <th className="p-2 text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {salesHistory.map((sale) => (
+                                    <tr key={sale.id} className="border-b border-[#EAE1D5] hover:bg-[#F5F0E6]">
+                                        <td className="p-2">{sale.date}</td>
+                                        <td className="p-2">{sale.items.reduce((sum, item) => sum + item.quantity, 0)}</td>
+                                        <td className="p-2">{sale.paymentMethod}</td>
+                                        <td className="p-2 text-right font-semibold text-[#3D2C1D]">₱{sale.total.toFixed(2)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+                </div>
+                <div className="mt-6 flex justify-end">
+                    <button
+                        onClick={() => setShowSalesReportModal(false)}
+                        className="px-6 py-3 bg-[#8C5A3A] text-white rounded-lg font-semibold hover:bg-[#6F4E37] transition"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+      )}
+
     </div>
   );
 };
