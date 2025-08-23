@@ -1,9 +1,7 @@
-// src/pages/Pos.tsx
 import React, { useState, useRef } from "react";
 import { FiSearch, FiPlus, FiMinus, FiTrash2, FiPrinter, FiLogOut, FiX, FiBarChart2 } from "react-icons/fi";
 import { FaMoneyBillWave, FaCreditCard, FaQrcode, FaUtensils, FaCoffee, FaBreadSlice } from "react-icons/fa";
 
-// --- TYPE DEFINITIONS ---
 interface Product {
   id: number;
   name: string;
@@ -28,7 +26,6 @@ interface Sale {
   date: string;
 }
 
-// --- MOCK DATA ---
 const productsData: Product[] = [
     { id: 1, name: "Espresso", category: "Coffee", price: 90, image: "/Espresso.png", description: "A concentrated coffee beverage brewed by forcing a small amount of nearly boiling water under pressure through finely-ground coffee beans." },
     { id: 2, name: "Americano", category: "Coffee", price: 100, image: "/hot americano.png", description: "A classic coffee drink made by diluting an espresso with hot water, giving it a similar strength to, but different flavor from, traditionally brewed coffee." },
@@ -60,7 +57,6 @@ const productsData: Product[] = [
     { id: 28, name: "White Chocolate Macadamia Cookie", category: "Bread", price: 50, image: "/white cookie.png", description: "A delicious cookie loaded with creamy white chocolate chunks and crunchy macadamia nuts." },
 ];
 
-// --- UPDATED SIDEBAR COMPONENT ---
 interface SidebarProps {
   onShowSalesReport: () => void;
   onShowReceipt: () => void;
@@ -68,14 +64,11 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ onShowSalesReport, onShowReceipt }) => (
     <div className="w-20 bg-[#3D2C1D] text-white flex flex-col justify-between items-center py-6">
-      {/* Top section with logo and new buttons */}
       <div className="flex flex-col items-center space-y-4">
-        {/* Logo */}
         <a href="#" className="p-3 bg-[#8C5A3A] rounded-lg hover:bg-[#6F4E37] transition-colors">
           <img src="/logo.png" alt="Logo" className="w-6 h-6" />
         </a>
         
-        {/* Sales Report Button */}
         <button 
           onClick={onShowSalesReport}
           title="Sales Report"
@@ -295,7 +288,6 @@ const Pos: React.FC = () => {
                 </div>
               </div>
 
-              {/* Product Grid */}
               <div className="flex-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 overflow-y-auto pr-2">
                 {filteredProducts.map((product) => (
                   <div
@@ -316,7 +308,6 @@ const Pos: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Side - Cart */}
         <div className="w-1/3 flex flex-col">
           <div className="bg-[#FFFBF5] p-6 rounded-lg shadow-md flex flex-col h-full">
               <h2 className="text-2xl font-bold mb-4 border-b border-[#D6C7B7] pb-3 text-[#3D2C1D]">Your Order</h2>
@@ -395,7 +386,6 @@ const Pos: React.FC = () => {
         </div>
       </main>
 
-      {/* Product Detail Modal */}
       {showProductModal && selectedProduct && (
         <div className="fixed inset-0 bg-[#3D2C1D] bg-opacity-70 flex justify-center items-center z-50">
           <div className="bg-[#FFFBF5] p-6 rounded-lg shadow-xl w-full max-w-lg animate-fadeIn relative">
@@ -448,7 +438,6 @@ const Pos: React.FC = () => {
         </div>
       )}
 
-      {/* Payment Modal */}
       {showPaymentModal && (
         <div className="fixed inset-0 bg-[#3D2C1D] bg-opacity-70 flex justify-center items-center">
         <div className="bg-[#FFFBF5] p-8 rounded-lg shadow-xl w-full max-w-md animate-fadeIn">
@@ -507,11 +496,9 @@ const Pos: React.FC = () => {
         </div>
       )}
 
-      {/* Receipt Modal */}
       {showReceiptModal && latestReceipt && (
         <div className="fixed inset-0 bg-[#3D2C1D] bg-opacity-70 flex justify-center items-center">
         <div className="bg-[#FFFBF5] p-8 rounded-lg shadow-xl w-full max-w-sm animate-fadeIn">
-            {/* The ref is attached here */}
             <div ref={receiptRef} className="text-sm text-[#3D2C1D]">
               <h2 className="text-2xl font-bold mb-4 text-center">Receipt</h2>
               <p className="text-center mb-2">Thank you for your purchase!</p>
@@ -564,7 +551,6 @@ const Pos: React.FC = () => {
         </div>
       )}
 
-      {/* Sales Report Modal */}
       {showSalesReportModal && (
         <div className="fixed inset-0 bg-[#3D2C1D] bg-opacity-70 flex justify-center items-center z-50">
             <div className="bg-[#FFFBF5] p-8 rounded-lg shadow-xl w-full max-w-2xl animate-fadeIn flex flex-col h-[80vh]">

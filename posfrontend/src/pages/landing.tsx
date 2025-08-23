@@ -16,7 +16,6 @@ const LandingPage = () => {
     }
     setError("");
     console.log("Logging in with:", { name, password });
-    // Handle login logic here
   };
 
   return (

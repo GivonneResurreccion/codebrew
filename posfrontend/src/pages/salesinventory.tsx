@@ -86,7 +86,7 @@ const Sidebar: FC<{ onSelectReport: (report: ReportType) => void }> = ({ onSelec
     };
 
     return (
-        <div className="w-64 bg-[#4b3832] text-white h-screen p-4 flex-shrink-0 flex flex-col">
+        <div className="w-64 bg-[#3D2C1D] text-white h-screen p-4 flex-shrink-0 flex flex-col">
             <img src="/logo.png" alt="Company Logo" className="w-32 mb-10 self-center" />
             <nav>
                 <ul>
