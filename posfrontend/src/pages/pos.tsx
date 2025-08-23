@@ -213,7 +213,7 @@ const Pos: React.FC = () => {
     }
   };
 
-
+  // --- FIXED PRINT FUNCTION ---
   const handlePrintReceipt = () => {
     const printContent = receiptRef.current?.innerHTML;
     const printWindow = window.open("", "Print", "width=600,height=800");
@@ -236,8 +236,12 @@ const Pos: React.FC = () => {
       printWindow.document.write('</body></html>');
       printWindow.document.close();
       printWindow.focus();
-      printWindow.print(); // This opens the print dialog
-      printWindow.close();
+      
+      // Use a timeout to ensure content is loaded before printing
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 250); // A short delay can help ensure everything renders.
     }
   };
 

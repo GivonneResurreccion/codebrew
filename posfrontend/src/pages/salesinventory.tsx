@@ -5,8 +5,6 @@ const ClipboardListIcon: FC = () => <svg xmlns="http://www.w3.org/2000/svg" clas
 const StarIcon: FC = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-12v4m-2-2h4m5 4v4m-2-2h4M17 3l-1.17.585A2 2 0 0115 5.172V17a2 2 0 002 2h2a2 2 0 002-2V5.172a2 2 0 01-.83-.586L17 3z" /></svg>;
 const TruckIcon: FC = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>;
 
-
-// ---------- TYPES ----------
 type ConsolidatedSale = { id: number; branch: string; amount: number; };
 type BranchSale = { id: number; product: string; quantity: number; amount: number; };
 type SalesData = { consolidated: ConsolidatedSale[]; "Branch A": BranchSale[]; "Branch B": BranchSale[]; "Branch C": BranchSale[]; };
@@ -15,7 +13,6 @@ type Product = { id: number; name: string; category: "Coffee" | "Bread"; price: 
 type AssetItem = { id: number; name: string; branch: string; condition: string; status: "In Use" | "In Repair" | "Out of Service"; };
 type ReportType = "Daily Sales" | "Inventory" | "Our Products" | "Asset";
 
-// ---------- DATA ----------
 const salesData: SalesData = {
   consolidated: [ { id: 1, branch: "Branch A", amount: 5000 }, { id: 2, branch: "Branch B", amount: 7500 }, { id: 3, branch: "Branch C", amount: 3200 }, ],
   "Branch A": [ { id: 1, product: "Espresso", quantity: 100, amount: 2000 }, { id: 2, product: "Croissant", quantity: 50, amount: 1500 }, { id: 3, product: "Latte", quantity: 80, amount: 1500 }, ],
@@ -55,7 +52,6 @@ const productsData: Product[] = [
 ];
 const assetData: AssetItem[] = [ { id: 1, name: "Espresso Machine", branch: "Branch A", condition: "Good", status: "In Use" }, { id: 2, name: "Oven", branch: "Branch B", condition: "Excellent", status: "In Use" }, { id: 3, name: "Delivery Van", branch: "Consolidated", condition: "Fair", status: "In Repair" }, { id: 4, name: "POS System", branch: "Branch C", condition: "Good", status: "In Use" }, ];
 
-// ---------- REUSABLE UI COMPONENTS ----------
 const Card: FC<{ children: ReactNode; className?: string }> = ({ children, className }) => (
   <div className={`bg-white shadow-md rounded-lg p-6 ${className}`}>
     {children}
@@ -69,8 +65,6 @@ const PageHeader: FC<{ title: string; children?: ReactNode; }> = ({ title, child
   </div>
 );
 
-
-// ---------- REPORT COMPONENTS ----------
 const Sidebar: FC<{ onSelectReport: (report: ReportType) => void }> = ({ onSelectReport }) => {
     const [activeReport, setActiveReport] = useState<ReportType>("Daily Sales");
     const menuItems: { name: ReportType; icon: ReactNode }[] = [
@@ -219,7 +213,7 @@ const InventoryReport: FC = () => {
 
 const ProductList: FC = () => (
     <div className="p-8">
-      <PageHeader title="Our Products" />
+      <PageHeader title="Top-Selling Products" />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {productsData.map((product) => (
           <div key={product.id} className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl">
@@ -276,7 +270,6 @@ const AssetReport: FC = () => (
     </div>
 );
 
-// ---------- DASHBOARD ----------
 const Dashboard: FC = () => {
     const [selectedReport, setSelectedReport] = useState<ReportType>("Daily Sales");
 
